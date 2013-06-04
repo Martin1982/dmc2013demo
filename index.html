@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dutch Mobile Conference Demo</title>
+    <style>
+        body {
+            background: #333;
+            color: #fff;
+            margin: 50px;
+            font-family: "sans serif",sans-serif;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        img {
+            max-width: 90%;
+            height: auto;
+            width: auto\9; /* ie8 */
+            border: 3px solid #fff;
+        }
+
+        #glower.pulse {
+            animation-name: pulsating;
+            animation-duration: 2s;
+            animation-iteration-count: infinite;
+            -webkit-animation-name: pulsating;
+            -webkit-animation-duration: 2s;
+            -webkit-animation-iteration-count: infinite;
+        }
+
+        @keyframes pulsating {
+            from { background-color: #DDD; box-shadow: 0 0 9px #DDD; }
+            50% { background-color: #FFF; box-shadow: 0 0 50px #FFF; }
+            to { background-color: #DDD; box-shadow: 0 0 9px #DDD; }
+        }
+
+        @-webkit-keyframes pulsating {
+            from { background-color: #DDD; box-shadow: 0 0 9px #DDD; }
+            50% { background-color: #FFF; box-shadow: 0 0 50px #FFF; }
+            to { background-color: #DDD; box-shadow: 0 0 9px #DDD; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="instruct">Tap the icon when it starts to glow!</div>
+<img id="glower" src="dmc480x480.png" alt="Press when glowing..." />
+<div id="score">Reaction time: <span id="time"></span></div>
+
+<script type="text/javascript">
+    var pulserStart = null;
+
+    function getRandomInt(min, max)
+    {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function stopGlower()
+    {
+        var endTime = new Date().getTime(),
+            score   = endTime - pulserStart,
+            scoreEl = document.getElementById('time'),
+            pulser  = document.getElementById('glower');
+
+        if (pulserStart === null) {
+            return;
+        }
+
+        pulserStart = null;
+
+        pulser.setAttribute('class', '');
+        pulser.removeEventListener('click', stopGlower, false);
+        scoreEl.innerHTML = (score.toString() + " ms");
+
+        startGame();
+    }
+
+    function startGlower()
+    {
+        var pulser = document.getElementById('glower');
+
+        pulser.setAttribute('class', 'pulse');
+        pulserStart = new Date().getTime();
+
+        pulser.addEventListener('click', stopGlower, false);
+    }
+
+    function startGame()
+    {
+        var startPulse = getRandomInt(3, 30);
+        setTimeout(startGlower, (startPulse*1000));
+    }
+
+    startGame();
+</script>
+
+</body>
+</html>
